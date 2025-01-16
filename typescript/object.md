@@ -93,3 +93,57 @@ const age: number = user.age;
 // Error: Type 'number | undefined' is not assignable to type 'number'.
 ```
 
+# 読み取り専用のプロパティの宣言
+
+プロパティ名の前に `readonly` を付けることで、読み取り専用のプロパティを宣言できる。
+
+```typescript
+type User = {
+  readonly name: string;
+  age: number;
+};
+
+const user: User = { name: 'Taro', age: 20 };
+user.name = 'Jiro'; // Error: Cannot assign to 'name' because it is a read-only property.
+```
+
+> [!IMPORTANT]
+Javascript だとオブジェクトのプロパティを変更できてしまうが、Typescript では `readonly` を使用することで、プロパティの変更を防ぐことができる。
+
+# typeof キーワードで変更の型を得る
+
+`typeof` キーワードを使用することで、変数の型を取得することができる。
+**型推論の結果を型として抽出・再利用したい場合に typeof は効果的**
+
+```typescript
+const obj = { a: 1, b: 2 };
+type ObjType = typeof obj;
+const obj2: ObjType = { a: 3, b: 4 };
+```
+
+## いつ使うべきか
+基本的には、型を明示的に宣言する方がわかりやすいプログラムになるため、`typeof` はあまり使うべきではない。
+
+> 見極めるためのポイントは、「何が最上位の事実か」を考えることです。基本的に、プログラムを支える前提となる事実はプログラム上に明記されるべきです。そこから自動的に導かれるような付属的な事柄については、（わかりやすさのために明記してもかまいませんが）明記しなくても良いことがあります。
+
+最上位が事実が型のパターンは、以下のように `type` で明示的に宣言する。
+`telNumber` のプロパティが追加になった場合に変更するべきは `User` 型で、その後に付属して残りのプログラムを変更することが望ましい。
+
+```typescript
+type User = { name: string; age: number }
+```
+
+最上位が値のパターンは、次のようなものが挙げられる。
+
+```typescript
+const commands = ["attack", "defend", "run"] as const;
+type Command = typeof commands[number];
+```
+
+上記のプログラムを型が最上位になるように変更すると、以下のようになり、Command に何があるかという事実が 2 か所に分散してしまう。
+
+```typescript
+type Command = "attack" | "defend" | "run";
+const commands: Command[] = ["attack", "defend", "run"];
+```
+
