@@ -30,7 +30,8 @@ const obj2 = { a: 3, ...obj1 };
 // typescript: 'a' is specified more than once, so this usage will be overwritten,
 ```
 
-# インデックスシグネチャ
+# オブジェクトの型
+## インデックスシグネチャ
 
 オブジェクトのプロパティに対して、任意のプロパティを追加できる機能です。
 
@@ -48,8 +49,8 @@ data.orange = 300;
 data.city = 'Fukuoka';
 // Error: type 'Fukuoka' is not assignable to type 'number'.
 ```
-## 注意点
 
+### 注意点
 インデックスシグネチャは、オブジェクトのプロパティに対して任意のプロパティを追加できる機能ですが、型安全性が低下するため、使用は避けるべき。以下のようなプログラムをコンパイル時にエラーとして検出できない。
 
 ```typescript
@@ -64,7 +65,7 @@ console.log(num); // undefined
 
 **インデックスシグネチャを使用する場合は、型安全性が低下するため、使用は避ける**
 
-# オプショナルなプロパティ
+## オプショナルなプロパティ
 
 オプショナルなプロパティの宣言方法は、プロパティ名の後ろに `?` を付ける。
 
@@ -93,7 +94,7 @@ const age: number = user.age;
 // Error: Type 'number | undefined' is not assignable to type 'number'.
 ```
 
-# 読み取り専用のプロパティの宣言
+## 読み取り専用のプロパティの宣言
 
 プロパティ名の前に `readonly` を付けることで、読み取り専用のプロパティを宣言できる。
 
@@ -110,7 +111,7 @@ user.name = 'Jiro'; // Error: Cannot assign to 'name' because it is a read-only 
 > [!IMPORTANT]
 Javascript だとオブジェクトのプロパティを変更できてしまうが、Typescript では `readonly` を使用することで、プロパティの変更を防ぐことができる。
 
-# typeof キーワードで変更の型を得る
+## typeof キーワードで変更の型を得る
 
 `typeof` キーワードを使用することで、変数の型を取得することができる。
 **型推論の結果を型として抽出・再利用したい場合に typeof は効果的**
@@ -121,7 +122,7 @@ type ObjType = typeof obj;
 const obj2: ObjType = { a: 3, b: 4 };
 ```
 
-## いつ使うべきか
+### いつ使うべきか
 基本的には、型を明示的に宣言する方がわかりやすいプログラムになるため、`typeof` はあまり使うべきではない。
 
 > 見極めるためのポイントは、「何が最上位の事実か」を考えることです。基本的に、プログラムを支える前提となる事実はプログラム上に明記されるべきです。そこから自動的に導かれるような付属的な事柄については、（わかりやすさのために明記してもかまいませんが）明記しなくても良いことがあります。
@@ -146,4 +147,10 @@ type Command = typeof commands[number];
 type Command = "attack" | "defend" | "run";
 const commands: Command[] = ["attack", "defend", "run"];
 ```
+# 部分型関係
 
+## 部分型とは
+2 つの型の互換性を表す概念で、ある型が別の型の一部である場合、部分型関係にあると言います。
+
+```typescript
+```
