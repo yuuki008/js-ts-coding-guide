@@ -1,1 +1,0 @@
-# js-ts-coding-guide

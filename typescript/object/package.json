@@ -1,0 +1,13 @@
+{
+  "name": "typescript-bun-start",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
