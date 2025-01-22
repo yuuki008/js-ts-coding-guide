@@ -228,3 +228,68 @@ console.log(arr[100]); // undefined
 
 # 分割代入
 
+**分割代入はオブジェクトや配列の要素を別々の変数に代入する構文。**
+
+## オブジェクトの分割代入
+
+```typescript
+const obj = { foo: 'Hello', bar: 42 };
+const { foo, bar } = obj
+
+// 別の変数名に代入することが可能
+const { foo: f, bar: b } = obj
+
+// 存在しないプロパティを指定するとコンパイルエラーになる
+const { foo, bar, qux } = obj // Error: Property 'qux' does not exist on type '{ foo: string; bar: number; }'.
+
+// ネストしたプロパティも分割代入が可能
+const obj2 = { foo: 'Hello', bar: { baz: 42 } };
+const { foo, bar: { baz } } = obj2
+```
+
+## 配列の分割代入
+
+```typescript
+const arr = [1, 2, 3];
+const [a, b, c] = arr;
+console.log(a, b, c); // 1 2 3
+
+// 空白を用いてスキップも可能
+const [a, , c] = arr;
+
+// オブジェクトパターンとの組み合わせも可能
+const { arr: [a, b, c] } = { arr: [1, 2, 3] };
+const [{ foo, bar }] = [{ foo: 'Hello', bar: 42 }];
+```
+
+> [!IMPORTANT]
+**デフォルトの値を指定することも可能**
+ただ分割代入の構文を理解していないと理解できない、直感的ではなプログラムになってしまう。開発チームの状況によって使うかどうか判断すべき。
+```typescript
+const obj = { foo: 'Hello' };
+const { foo, bar = 42 } = obj;
+
+/** パターンに対してもデフォルト値を指定できる **/
+type Obj2 = { foo?: { bar: number } };
+const obj2: Obj2 = {};
+const { foo: { bar } } = obj2 // Error: Property 'foo' does not exist on type 'Obj2'.
+
+// foo プロパティに対して、デフォルト値を設定していればエラーにならない
+const { foo: { bar } = { bar: 42 } } = obj2;
+```
+
+## rest パターンでオブジェクトの残りを取得
+rest パターンを使用することで、分割代入で取得したプロパティ以外のプロパティを取得することができる。
+
+```typescript
+const obj = { foo: 'Hello', bar: 42, baz: true };
+const { foo, ...rest } = obj;
+
+const arr = [1, 2, 3, 4, 5];
+const [a, b, ...rest] = arr;
+```
+
+
+
+
+
