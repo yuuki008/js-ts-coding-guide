@@ -1,5 +1,5 @@
 ## 部分型関係 (Subtyping Relation)
-> **部分型**とは、2 つの関係の互換性を表す概念です。型Sが型Bの部分型であると、S型の値がT型の値でもあることを指します。
+> **部分型**とは、2 つの関係の互換性を表す概念です。型Sが型Bの部分型であると、S型の値がB型の値でもあることを指します。
 
 ```typescript
 type FooBar = {
@@ -80,6 +80,83 @@ type HumanFamily = {
 プリミティブな値である `familyName` は当然部分型になるが、`father`, `mother`, `child` は `Human` が `Animal` の部分型であるため、`HumanFamily` は `AnimalFamily` の部分型になる。
 
 
+# 型引数
+
+Typescript では型を定義する時にパラメーターを持たせることができる。
+
+```typescript
+type Employee<T> = {
+    name: string;
+    department: T;
+}
+```
+
+上記のように `T` という型引数を受け取り、型の中で使用することができる。
+型引数を持つ型は型引数を受け取って、初めて型を完成されるため、使用時に型引数を指定しなかった場合はコンパイルエラーが発生する。
+
+```typescript
+const department = {
+    id: 1,
+    name: 'Marketing'
+}
+
+const employee: Employee = {
+    name: 'John',
+    department // Error: Generic type 'Employee' requires 1 type argument(s).
+}
+```
+
+また型引数は複数の指定も可能。
+
+```typescript
+type Employee<T, U> = {
+    name: string;
+    department: T;
+    position: U;
+}
+```
+
+## 型引数への制約
+
+`extends` で型引数に制約を加えることができる。
+
+```typescript
+type Department = {
+    id: number;
+    name: string;
+}
+type Employee<T extends Department> = {
+    name: string;
+    department: T;
+}
+
+type Position = 'Manager' | 'Staff';
+const employee: Employee<Position> = {
+    name: 'John',
+    department: 'Manager' // Error: Type 'string' is not assignable to type 'Position'.
+}
+```
+
+`extends` で指定した型の部分型のみを受け付けるようになる。
 
 
+## オプショナルな型引数
+
+型引数にデフォルト値を指定することができる。
+
+```typescript
+type Employee<T = Department> = {
+    name: string;
+    department: T;
+}
+
+const employee: Employee = {
+    name: 'John',
+    department: {
+        id: 1,
+        name: 'Marketing'
+    }
+}
+```
+上記のように型引数を指定しなかった場合はデフォルト値が適用される。
 
