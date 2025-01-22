@@ -160,3 +160,71 @@ const employee: Employee = {
 ```
 上記のように型引数を指定しなかった場合はデフォルト値が適用される。
 
+# 配列
+
+> [!IMPORTANT]
+**Typescript で配列はオブジェクトの一種**
+そのためオブジェクトと同様に `const` で宣言した配列の要素も変更が可能。
+```typescript
+const arr = [1, 2, 3];
+arr.push(4);
+console.log(arr); // [1, 2, 3, 4]
+arr[0] = 0;
+console.log(arr); // [0, 2, 3, 4]
+```
+型の宣言方法には以下のように2つがある。
+```typescript
+const arr: number[] = [1, 2, 3];
+const arr: Array<number> = [1, 2, 3];
+```
+
+## readonly
+
+Javascript では配列の中身の変更をすることができますが、Typescript の `readonly` を使用することで配列の中身の変更を禁止することができます。
+
+```typescript
+const arr: readonly number[] = [1, 2, 3];
+aa[1] = 400 // Error: Index signature in type 'readonly number[]' only permits reading.
+```
+> [!IMPORTANT]
+> **オブジェクトには積極的に `readonly` を使用しよう**
+> Javascript のオブジェクトは参照型のデータであるため、予期せぬ変更を防ぐことができない。そのため typescript の `readonly` は配列の中身の変更を禁止するようにしよう。
+
+## タプル型
+
+**要素数が固定された配列型のことをタプル型と呼ぶ。**
+要素数が固定されている代わりに、それぞれの要素に異なる型を指定できる。
+要素を超えた数のアクセスや、型の不一致による代入はエラーになる。
+
+
+```typescript
+const tuple: [string, number] = ['Hello', 42];
+
+tuple[0] = 'World'; // OK
+tuple[1] = 100; // OK
+tuple[2] = 200; // Error: Tuple type '[string, number]' of length '2' has no element at index '2'.
+tuple[1] = 'World'; // Error: Type 'string' is not assignable to type 'number'.
+```
+
+> [!NOTE]
+> **タプル型のユースケースがわからない**
+> 基本的に固定長の配列型は、オブジェクト型で代用できるし、そっちの方が可読性が高い。
+> ラベル付きのタプルも定義できるが、呼び出す時に user.name は使えない
+```typescript
+type User = [name: string, age: number]
+const user: User = ['John', 42];
+console.log(user.name); // Error: Property 'name' does not exist on type 'User'.
+```
+
+> [!TIP]
+**インデックスアクセスは極力避ける**
+配列型もインデックスシグネチャと同様に Typescript と実行時のランタイムで矛盾が起こる可能性がある。
+配列型では要素数が決まっていないため、指定するインデックスに制限がない。よって存在しないインデックスにアクセスしても Typescript はエラーを出さない。
+以下のように `arr[100]` の要素は `Typescript` では `number` として扱われるが、実行時には `undefined` が入り、矛盾が生じる。
+```typescript
+const arr: number[] = [1, 2, 3];
+console.log(arr[100]); // undefined
+```
+
+# 分割代入
+
